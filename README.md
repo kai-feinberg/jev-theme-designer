@@ -1,27 +1,23 @@
 # Jev Theme Explorer
 
-A Vite and React tool that turns one aesthetic prompt into three themes on a fixed demo page. Theme choices come from curated design options. The server calls TypeSafe Jev Choice questions and uses the first, second, and third ranked option for each property.
+Turn one aesthetic prompt into three design directions. Jev chooses from a curated vocabulary; the app renders and compares the results across the same sample pages.
 
-## Run
+![Three generated theme directions side by side](screenshots/theme-explorer.png)
 
-1. Put `TYPESAFE_API_KEY=...` in `.env.local`.
-2. Run `pnpm install`.
-3. Run `pnpm dev` and open the URL shown in the terminal.
+## How it works
 
-The API key is read only by the Express server. Do not use a `VITE_` prefix for it.
+1. The browser sends your prompt to the Express server. The server calls Jev `systemOne` with a TypeSafe `choice` question for each design property.
+2. Jev returns probability scores. For every property, the app assigns the highest, second-highest, and third-highest options to three themes. These are ranked choices, not three whole-theme scores.
+3. The client maps those semantic choices to curated colors, type, spacing, shape, and treatments, then renders them with CSS. The app owns the visual rules; Jev does not generate CSS.
+4. Switch between Landing, Editorial, Storefront, and Dashboard to compare the same three themes on different content. Copy a theme as versioned JSON with its choices, resolved tokens, and CSS variables.
 
-## Check
+Palette-aware accent pairings keep the second color distinct and readable. Sample pages are illustrative; the storefront does not process purchases.
 
-- `pnpm test` runs ranking and validation tests.
-- `pnpm build` checks TypeScript and builds the shareable client.
-- `NODE_ENV=production pnpm start` serves the production build and API from one process.
+![Editorial content compared across the same three themes](screenshots/editorial-comparison.png)
 
-The first screen shows an illustrative sample. After a successful generation, the label states that the themes came from the latest prompt. If the API is unavailable, the app retains the previous themes and shows an error.
+## Run locally
 
-See [ASSUMPTIONS.md](ASSUMPTIONS.md) for implementation decisions.
+1. Add `TYPESAFE_API_KEY=...` to `.env.local` (server only; do not use a `VITE_` prefix).
+2. Run `pnpm install`, then `pnpm dev` and open the URL printed in the terminal.
 
-## Compare and copy
-
-Choose Landing page, Editorial, Storefront, or Dashboard above the previews. Each theme shows the same selected page. Use **Copy theme** to copy versioned JSON with the semantic choices and resolved design tokens. Example pages are illustrative; the storefront does not process purchases.
-
-Gradient and image-frame treatments are selected from curated options. The copied JSON includes their semantic names, resolved CSS, and the preview CSS variables. Image framing appears on illustrated areas; the dashboard has no image area.
+Without a working API key, the app can still display its built-in sample themes. See [ASSUMPTIONS.md](ASSUMPTIONS.md) for implementation decisions.
