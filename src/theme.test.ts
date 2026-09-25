@@ -39,5 +39,46 @@ describe('theme export', () => {
     expect(result.tokens.treatments.gradient.css).toContain('linear-gradient')
     expect(result.tokens.treatments.imageFrame.name).toBe('captioned')
     expect(result.cssVariables['--p-gradient']).toBe(result.tokens.treatments.gradient.css)
+    expect(result.tokens.color.contrastAccent.background).toBe('#e1a928')
+    expect(result.tokens.color.contrastAccent.name).toBe('citrus')
+    expect(result.cssVariables['--p-pop-ink']).toBe('#241d1b')
+  })
+})
+
+describe('palette-aware accent pairings', () => {
+  it('uses five distinct accents for each palette, away from the primary hue', async () => {
+    const { accentColors, accentPairings, palettes } = await import('./theme')
+    const hue = (hex: string) => {
+      const [red, green, blue] = [1, 3, 5].map(index => parseInt(hex.slice(index, index + 2), 16) / 255)
+      const max = Math.max(red, green, blue)
+      const min = Math.min(red, green, blue)
+      if (max === min) return 0
+      const delta = max - min
+      const sector = max === red ? ((green - blue) / delta) % 6 : max === green ? (blue - red) / delta + 2 : (red - green) / delta + 4
+      return (sector * 60 + 360) % 360
+    }
+    for (const [palette, pairings] of Object.entries(accentPairings)) {
+      expect(new Set(Object.values(pairings)).size).toBe(5)
+      const primaryHue = hue(palettes[palette as keyof typeof palettes][2])
+      for (const name of Object.values(pairings)) {
+        const distance = Math.abs(primaryHue - hue(accentColors[name].background))
+        expect(Math.min(distance, 360 - distance)).toBeGreaterThanOrEqual(29)
+      }
+    }
+  })
+})
+
+describe('accent color contrast', () => {
+  it('keeps every accent label above WCAG AA text contrast', async () => {
+    const { accentColors } = await import('./theme')
+    const luminance = (hex: string) => {
+      const channels = [1, 3, 5].map(index => parseInt(hex.slice(index, index + 2), 16) / 255)
+      const [red, green, blue] = channels.map(value => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4)
+      return 0.2126 * red + 0.7152 * green + 0.0722 * blue
+    }
+    for (const accent of Object.values(accentColors)) {
+      const values = [luminance(accent.background), luminance(accent.foreground)].sort((a, b) => a - b)
+      expect((values[1] + 0.05) / (values[0] + 0.05)).toBeGreaterThanOrEqual(4.5)
+    }
   })
 })

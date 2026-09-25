@@ -21,3 +21,14 @@ Palette-aware accent pairings keep the second color distinct and readable. Sampl
 2. Run `pnpm install`, then `pnpm dev` and open the URL printed in the terminal.
 
 Without a working API key, the app can still display its built-in sample themes. See [ASSUMPTIONS.md](ASSUMPTIONS.md) for implementation decisions.
+
+## Deploy to Cloudflare Pages
+
+Build the static site and Pages Function bundle with `pnpm run build:pages`, then deploy the `dist` directory with Wrangler:
+
+```sh
+pnpm run build:pages
+pnpm dlx wrangler@4.140.0 pages deploy dist --project-name jev-theme-designer --branch main
+```
+
+Set `TYPESAFE_API_KEY` as a Cloudflare Pages production secret. Keep it server-side; do not use a `VITE_` prefix.

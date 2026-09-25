@@ -24,3 +24,15 @@
 .theme-image-vivid .visual-media{filter:saturate(1.5) contrast(1.08)}
 .theme-image-monochrome .visual-media{filter:grayscale(1)}
 .theme-image-warm .visual-media{filter:sepia(.25)}
+/* A second color role gives each palette a distinct, readable accent. */
+.preview .accent-chip{display:inline-block;background:var(--p-pop);color:var(--p-pop-ink);padding:5px 7px;border-radius:var(--p-radius);line-height:1.1}
+.preview .hero-art .art-sun,.preview .editorial-sun{background:var(--p-pop)}
+.preview .feature:first-child .feature-glyph{color:var(--p-pop)}
+.preview .product-badge{position:absolute;z-index:3;right:8px;top:8px;background:var(--p-pop);color:var(--p-pop-ink);padding:4px 5px;border-radius:var(--p-radius);font:600 6px 'IBM Plex Mono',monospace;letter-spacing:.08em}
+.preview .store-hero-art:before{content:'';position:absolute;width:110px;height:110px;border-radius:50%;background:var(--p-pop);opacity:.25;right:7%;top:12%}
+.preview .dash-status-pill{display:inline-block;width:max-content;background:var(--p-pop);color:var(--p-pop-ink);padding:4px 5px;border-radius:var(--p-radius);opacity:1}
+.preview .dash-bars>div:last-child span{background:var(--p-pop)}
+.preview .editorial-article blockquote{color:var(--p-primary)}
+/* Compact start and expandable theme previews */
+.workspace-intro{min-height:0;padding:34px 0 22px;align-items:center}.workspace-intro h1{font-size:clamp(26px,3vw,38px);line-height:1.15;letter-spacing:-.045em;margin:0}.prompt-section{margin-bottom:0}.preview-grid:has(.theme-panel.is-expanded){grid-template-columns:minmax(0,1fr)}.theme-panel.is-expanded{grid-column:1/-1}.theme-panel.is-expanded .preview{height:min(82vh,1100px)}.expand-preview{border:0;background:transparent;color:#6b7169;font-family:'IBM Plex Mono',monospace;font-size:9px;padding:7px 2px;white-space:nowrap}.expand-preview:hover{color:#d46441}.theme-panel:fullscreen{background:#f1f1ec;padding:18px 24px;overflow:auto}.theme-panel:fullscreen .preview{height:calc(100vh - 100px);max-height:none}.theme-panel:fullscreen .panel-head{height:52px}.panel-actions{gap:9px}@media(max-width:720px){.workspace-intro{padding:25px 0 18px}.workspace-intro h1{font-size:26px}.panel-actions{gap:5px}.expand-preview{font-size:8px}.theme-panel.is-expanded .preview{height:78vh}}
+.workspace-intro h1 em{position:relative;display:inline-block;color:#d9613b;font-family:'DM Serif Display',serif;font-weight:400;letter-spacing:-.045em;white-space:nowrap}.workspace-intro h1 em::after{content:'';position:absolute;left:0;right:0;bottom:-3px;height:2px;background:#d9613b;transform:rotate(-1deg)}

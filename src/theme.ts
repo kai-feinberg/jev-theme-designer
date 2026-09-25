@@ -2,6 +2,7 @@ export const options = {
   palette: {
     forest: 'Moss green and cream, organic and grounded', clay: 'Terracotta and oat, warm and handmade', olive: 'Olive and parchment, earthy and editorial', ink: 'Near black and paper, stark and graphic', cobalt: 'Strong blue and cool white, confident and modern', slate: 'Blue gray and mist, reserved and professional', lilac: 'Purple and pale lavender, playful and soft', coral: 'Coral and blush, lively and inviting', lemon: 'Gold and butter, bright and cheerful', plum: 'Deep plum and champagne, refined and luxurious', navy: 'Midnight navy and ivory, classic and premium', mint: 'Dark teal and mint, fresh and technical'
   },
+  accentColor: { warm: 'A distinct warm accent that feels human and inviting', cool: 'A distinct cool accent that feels clear and composed', bright: 'A distinct bright accent that adds energy', deep: 'A distinct rich accent with visual weight', soft: 'A distinct gentle accent with low visual pressure' },
   headingFont: { fraunces: 'Expressive rounded serif, warm editorial', dmSerif: 'High contrast display serif, elegant', archivo: 'Strong utilitarian sans serif', barlow: 'Condensed bold sans serif, poster like', manrope: 'Clean contemporary geometric sans serif', space: 'Distinct geometric sans serif, technical' },
   bodyFont: { dmSans: 'Neutral humanist sans serif', manrope: 'Precise contemporary sans serif', archivo: 'Direct and structured sans serif', outfit: 'Friendly rounded sans serif', plex: 'Monospaced technical type' },
   radius: { square: 'Sharp square corners', subtle: 'Barely softened corners', rounded: 'Clearly rounded corners', soft: 'Generously soft corners', pill: 'Fully rounded pills' },
@@ -24,6 +25,36 @@ export const propertyNames = Object.keys(options) as Property[]
 export const palettes = {
   forest: ['#f0f0e7','#172923','#4d6357','#dae6d9','#bad1c1'], clay: ['#f6ede1','#3b2a26','#a95039','#efc9ad','#efddd0'], olive: ['#f2f0dd','#303727','#6e7443','#e3e6c2','#e9e5cb'], ink: ['#f5f4ef','#191a18','#303331','#e5e4de','#deddd6'], cobalt: ['#f0f4fb','#152745','#315cbd','#d4e2fa','#dfe8f6'], slate: ['#eef3f5','#24343e','#4d687b','#d9e5ea','#e2e9ed'], lilac: ['#f6f0fa','#342440','#8056a4','#e6d6f1','#e8def0'], coral: ['#fff2ed','#482a2b','#d15d52','#f9d1c8','#f7e1dc'], lemon: ['#fcf8df','#3d341e','#b58a13','#f4e59f','#f5ecc5'], plum: ['#f6efe9','#352139','#713c69','#e8cddd','#eee1df'], navy: ['#f1f1e8','#17243b','#344e73','#d7dce4','#e5e7e6'], mint: ['#edf8f3','#153b37','#277c72','#c1e8da','#d9f0e7']
 } as const
+export const accentColors = {
+  citrus: { background: '#e1a928', foreground: '#241d1b' },
+  coral: { background: '#dc735f', foreground: '#241d1b' },
+  blue: { background: '#3d63d6', foreground: '#faf9f4' },
+  mint: { background: '#6db8a6', foreground: '#241d1b' },
+  violet: { background: '#8a57be', foreground: '#faf9f4' },
+  lime: { background: '#bdd153', foreground: '#241d1b' },
+  rose: { background: '#bf4673', foreground: '#faf9f4' }
+} as const
+type PaletteName = keyof typeof options.palette
+type AccentChoice = keyof typeof options.accentColor
+type AccentName = keyof typeof accentColors
+export const accentPairings: Record<PaletteName, Record<AccentChoice, AccentName>> = {
+  forest: { warm: 'coral', cool: 'blue', bright: 'citrus', deep: 'rose', soft: 'lime' },
+  clay: { warm: 'citrus', cool: 'blue', bright: 'lime', deep: 'violet', soft: 'mint' },
+  olive: { warm: 'coral', cool: 'blue', bright: 'rose', deep: 'violet', soft: 'mint' },
+  ink: { warm: 'coral', cool: 'blue', bright: 'citrus', deep: 'rose', soft: 'lime' },
+  cobalt: { warm: 'coral', cool: 'mint', bright: 'citrus', deep: 'rose', soft: 'lime' },
+  slate: { warm: 'citrus', cool: 'violet', bright: 'lime', deep: 'rose', soft: 'mint' },
+  lilac: { warm: 'coral', cool: 'mint', bright: 'citrus', deep: 'rose', soft: 'lime' },
+  coral: { warm: 'citrus', cool: 'blue', bright: 'lime', deep: 'violet', soft: 'mint' },
+  lemon: { warm: 'coral', cool: 'blue', bright: 'rose', deep: 'violet', soft: 'mint' },
+  plum: { warm: 'citrus', cool: 'mint', bright: 'lime', deep: 'blue', soft: 'coral' },
+  navy: { warm: 'coral', cool: 'mint', bright: 'citrus', deep: 'rose', soft: 'lime' },
+  mint: { warm: 'coral', cool: 'blue', bright: 'citrus', deep: 'rose', soft: 'lime' }
+}
+export function resolveAccentColor(selection: Pick<Selection, 'palette' | 'accentColor'>) {
+  const name = accentPairings[selection.palette][selection.accentColor]
+  return { name, ...accentColors[name] }
+}
 export const fontMap = { fraunces:'Fraunces, Georgia, serif', dmSerif:'"DM Serif Display", Georgia, serif', archivo:'Archivo, sans-serif', barlow:'"Barlow Condensed", sans-serif', manrope:'Manrope, sans-serif', space:'"Space Grotesk", sans-serif', dmSans:'"DM Sans", sans-serif', outfit:'Outfit, sans-serif', plex:'"IBM Plex Mono", monospace' }
 export const radiusMap = { square:'0px', subtle:'5px', rounded:'12px', soft:'22px', pill:'999px' }
 export const shadowMap = { flat:'none', fine:'0 2px 8px rgba(20,25,20,.07)', soft:'0 10px 32px rgba(20,25,20,.12)', deep:'0 16px 34px rgba(20,25,20,.2)', offset:'5px 5px 0 rgba(20,25,20,.75)' }
@@ -44,9 +75,9 @@ export const imageFrameMap = {
   captioned: 'Attach a caption strip to the bottom of the image'
 } as const
 export const sampleSelections: Selection[] = [
-  {palette:'clay',headingFont:'fraunces',bodyFont:'dmSans',radius:'soft',shadow:'soft',density:'airy',border:'hairline',button:'solid',typeScale:'expressive',decoration:'arc',gradient:'wash',image:'warm',imageFrame:'captioned',navigation:'plain'},
-  {palette:'forest',headingFont:'archivo',bodyFont:'manrope',radius:'subtle',shadow:'flat',density:'measured',border:'strong',button:'contrast',typeScale:'balanced',decoration:'line',gradient:'none',image:'muted',imageFrame:'outlined',navigation:'line'},
-  {palette:'plum',headingFont:'dmSerif',bodyFont:'outfit',radius:'rounded',shadow:'fine',density:'spacious',border:'standard',button:'soft',typeScale:'monumental',decoration:'glow',gradient:'radial',image:'natural',imageFrame:'inset',navigation:'filled'}
+  {palette:'clay',accentColor:'warm',headingFont:'fraunces',bodyFont:'dmSans',radius:'soft',shadow:'soft',density:'airy',border:'hairline',button:'solid',typeScale:'expressive',decoration:'arc',gradient:'wash',image:'warm',imageFrame:'captioned',navigation:'plain'},
+  {palette:'forest',accentColor:'warm',headingFont:'archivo',bodyFont:'manrope',radius:'subtle',shadow:'flat',density:'measured',border:'strong',button:'contrast',typeScale:'balanced',decoration:'line',gradient:'none',image:'muted',imageFrame:'outlined',navigation:'line'},
+  {palette:'plum',accentColor:'cool',headingFont:'dmSerif',bodyFont:'outfit',radius:'rounded',shadow:'fine',density:'spacious',border:'standard',button:'soft',typeScale:'monumental',decoration:'glow',gradient:'radial',image:'natural',imageFrame:'inset',navigation:'filled'}
 ]
 export function validateSelections(value: unknown): value is Selection[] {
   return Array.isArray(value) && value.length === 3 && value.every(item => item && typeof item === 'object' && propertyNames.every(key => Object.hasOwn(options[key], item[key])))
@@ -66,12 +97,13 @@ export function rankThemes(probabilities: Record<string, Record<string, number>>
 
 export function createThemeExport(selection: Selection, prompt: string | null) {
   const [background, foreground, primary, accent, muted] = palettes[selection.palette]
+  const contrastAccent = resolveAccentColor(selection)
   return {
     format: 'jev-theme-explorer/v1',
     prompt,
     choices: selection,
     tokens: {
-      color: { background, foreground, primary, accent, muted },
+      color: { background, foreground, primary, accent, muted, contrastAccent },
       typography: { heading: fontMap[selection.headingFont], body: fontMap[selection.bodyFont], scale: typeScaleMap[selection.typeScale] },
       shape: { radius: radiusMap[selection.radius], shadow: shadowMap[selection.shadow], border: selection.border },
       spacing: { density: densityMap[selection.density] },
@@ -80,6 +112,7 @@ export function createThemeExport(selection: Selection, prompt: string | null) {
     cssVariables: {
       '--p-bg': background, '--p-ink': foreground, '--p-primary': primary,
       '--p-accent': accent, '--p-subtle': muted,
+      '--p-pop': contrastAccent.background, '--p-pop-ink': contrastAccent.foreground,
       '--p-heading': fontMap[selection.headingFont], '--p-body': fontMap[selection.bodyFont],
       '--p-radius': radiusMap[selection.radius], '--p-shadow': shadowMap[selection.shadow],
       '--p-density': densityMap[selection.density], '--p-scale': typeScaleMap[selection.typeScale],
